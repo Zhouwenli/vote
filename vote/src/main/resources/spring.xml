@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:p="http://www.springframework.org/schema/p"
+     xmlns:util="http://www.springframework.org/schema/util"
+      xmlns:aop="http://www.springframework.org/schema/aop"
+      xmlns:tx="http://www.springframework.org/schema/tx"
+     xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+      	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+      	http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+         http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+       <context:component-scan base-package="com.yc"/>
+       
+       <context:property-placeholder location="classpath:db.properties,classpath:mail.properties"/>
+       
+      <!-- oracle配置数据源 -->
+       <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" 
+       p:driverClassName="${jdbc.driverClassName}" 
+       p:url="${jdbc.url}" 
+       p:username="${jdbc.username}" p:password="${jdbc.password}"/>
+       
+       <!-- 配置mybatis会话工厂 -->
+       <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+       p:dataSource-ref="dataSource"
+       p:typeAliasesPackage="com.yc.us.entity"
+       p:mapperLocations="classpath:mapper/*Mapper.xml"
+       />
+       
+       <!-- 配置映射接口 -->
+        <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+			p:sqlSessionFactoryBeanName="sqlSessionFactory"
+			p:basePackage="com.yc.us.mapper"/>
+		<!-- 1.配置事物管理器 -->
+      <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+       p:dataSource-ref="dataSource"/>
+       <!-- 2.配置事务关联 -->
+       <tx:annotation-driven transaction-manager="transactionManager"/>
+       
+       
+       <!-- 配置邮件发送bean -->
+       <bean id="JavaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+       		<property name="host" value="${name.mail.host}"/>
+       		<property name="username" value="${name.mail.username}"/>
+       		<property name="password" value="${name.mail.password}"/>
+       		<property name="defaultEncoding" value="${name.mail.defaultEncoding}"/>
+       		<property name="javaMailProperties">
+       		<props>
+       			<prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+       			<prop key="mail.smtp.timeout">${mail.smtp.timeout}</prop>
+       		</props>
+       		</property>
+       </bean>
+       
+</beans>

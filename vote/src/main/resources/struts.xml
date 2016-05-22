@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="true" />
+    
+    <!-- 把struts的action交给spring容器 -->
+    <constant name="struts.objectFactory" value="spring"/>
+	
+     <package name="default" namespace="/" extends="struts-default">
+     
+     	<interceptors>
+     		<interceptor name="loginInterceptor" class="com.yc.us.interceptor.LoginIntercepter"/>
+     		<interceptor-stack name="myStack">
+     			<interceptor-ref name="defaultStack"/>
+     			<interceptor-ref name="loginInterceptor"/>
+     			<!--  
+     				<param name="includeMethods">vote</param>
+     			</interceptor-ref>-->
+     		</interceptor-stack>
+     		
+     	</interceptors>
+     	<global-results>
+     		<result name="login" type="redirect">/login.html</result>
+     	</global-results>
+     	 
+     	<action name="Login_login" class="loginAction" method="login">
+		  <result>/Login_seacher.action</result>
+		</action>
+		<action name="login_register" class="loginAction" method="register">
+		  <result>/reg_success.jsp</result>
+		  <result name="fail">/register.jsp</result>
+		</action>
+		<action name="registerMail_sendEail" class="registerMailAction" method="sendEmail">
+		  <result name="success">/send_success.jsp</result>
+		  <result name="fail">/register.jsp</result>
+		</action>
+		  
+		<action name="Login_seacher" class="loginAction" method="seacher">
+		  <result>/manage.jsp</result>
+		 </action>
+		 <action name="Vote_view" class="voteAction" method="view">
+		  <result>/view.jsp</result>
+		 </action>
+		 
+		 <action name="Vote_vote" class="voteAction" method="vote">
+		 	<interceptor-ref name="myStack"/> 
+		  <result>/vote.jsp</result>
+		 </action>
+		 <action name="Vote_save" class="voteAction" method="save">
+		
+		  <result>/vote_success.jsp</result>
+		  <result name="saveFail">/vote.jsp</result>
+		 </action>
+		 <action name="subject_save" class="subjectAction" method="save">
+		 	 <interceptor-ref name="myStack"/> 
+		 	<result>/add_success.jsp</result>
+		 	<result name="fail">/add.jsp</result>
+		 </action>
+		 
+		 <action name="user_active" class="registerMailAction" method="active">
+		  <result name="success">/active_success.jsp</result>
+		  <result name="fail">/error.jsp</result>
+		 </action>
+
+    </package>
+
+</struts>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+    <!-- 控制台输出 -->
+        <Console name="STDOUT" target="SYSTEM_OUT">
+        <!-- 日志文本输出的格式 -->
+            <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+        </Console>
+        <!-- 输出到指定文件 -->
+        <file name="logFile" fileName="logs/us.log">
+        <!-- 日志文本输出的格式 -->
+        	 <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+        </file>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.yc" level="debug"/>
+        <Logger name="org.apache.struts2" level="debug"/>
+        <Root level="warn">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="logfile"/>
+        </Root>
+    </Loggers>
+</Configuration>
